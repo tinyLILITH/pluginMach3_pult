@@ -32,8 +32,8 @@ namespace tst
 
 		static String^ initRequestCOM = "";
 		static String^ updRequestCOM = "";
-		static String^ axisSelected = "";
-		static String^ jogOverride = "";
+		static String^ axisSelected = "!aX$";
+		static double userJogOverride = 0;
 
 
 	};
