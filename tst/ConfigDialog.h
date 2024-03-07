@@ -223,7 +223,7 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 // Сохранение выбранного COM порта в файл
 this->statusCOM->Text = Convert::ToString(comList->SelectedItem);
 
-String^ filePath = "C:\\Mach3\\PlugIns\\ToolTurretSettings.txt";
+String^ filePath = "C:\\Mach3\\PlugIns\\ControlPult.txt";
 
 if (!System::IO::File::Exists(filePath)) {
 	
