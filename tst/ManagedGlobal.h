@@ -31,9 +31,11 @@ namespace tst
 		static	 IMyScriptObject^ _mInst = (IMyScriptObject^) _mach->GetScriptDispatch();
 
 		static String^ initRequestCOM = "";
+		static String^ initLPTPower = "";
 		static String^ updRequestCOM = "";
 		static String^ axisSelected = "!aX$";
 		static double userJogOverride = 0;
+
 
 
 	};

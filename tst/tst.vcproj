@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="tst"
+	Name="Control Pult"
 	ProjectGUID="{1D213E39-C284-4169-A119-20090C11B76A}"
 	RootNamespace="tst"
 	Keyword="ManagedCProj"
