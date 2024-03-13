@@ -29,12 +29,14 @@ namespace tst
 		static	 ConfigDialog^ CD = gcnew ConfigDialog();
 		static   IMach4^ _mach = (IMach4^) Marshal::GetActiveObject("Mach4.Document");
 		static	 IMyScriptObject^ _mInst = (IMyScriptObject^) _mach->GetScriptDispatch();
+		static String^ initRequestCOM = ""; //Сообщение инициализации МК
+		static String^ initLPTPower = ""; //Подтверждение на включение реле
+		//static String^ updRequestCOM = "";
+		//static String^ axisSelected = "!aX$"; //Ось выбранная по умолчанию
+		//static double userJogOverride = 0; //Процентное соотношение скорости (не используется, нужно для энкодера)
 
-		static String^ initRequestCOM = "";
-		static String^ initLPTPower = "";
-		static String^ updRequestCOM = "";
-		static String^ axisSelected = "!aX$";
-		static double userJogOverride = 0;
+		static int cnt1, cnt2, cnt3 = 0;
+		
 
 
 

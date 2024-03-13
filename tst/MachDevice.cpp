@@ -447,6 +447,7 @@ extern "C" __declspec(dllexport) void StopPlug(void)
 extern "C" __declspec(dllexport) void Update()
 {
 #ifdef	PI_UPDATE
+
 	piUpdate();
 #endif
 }

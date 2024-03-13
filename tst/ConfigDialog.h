@@ -7,9 +7,7 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 
-
 namespace tst {
- 
 
 	/// <summary>
 	/// Summary for ConfigDialog
@@ -218,7 +216,8 @@ namespace tst {
 
 
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-
+	 
+			 
 
 // Сохранение выбранного COM порта в файл
 this->statusCOM->Text = Convert::ToString(comList->SelectedItem);
@@ -241,6 +240,9 @@ outputFile->Close();
 
 
 
-}
+	}
+
+
+
 };
 }

@@ -12,7 +12,7 @@
 #pragma once
 
 #define	PI_PLUGIN_CPP
-#define	PI_PLUGINNAME	"tst"
+#define	PI_PLUGINNAME	"Control Pult"
 
 //---------------------------------------------------------------------
 // the includes we need for the mach data structures
