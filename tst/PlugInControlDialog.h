@@ -26,7 +26,6 @@ namespace tst {
 
 
 
-
 	public ref class PlugInControlDialog : public System::Windows::Forms::Form
 	{
 	public:
