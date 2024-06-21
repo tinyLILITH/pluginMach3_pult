@@ -21,6 +21,8 @@ namespace tst {
 	public ref class ConfigDialog : public System::Windows::Forms::Form
 	{
 	public:
+		static String^ selectedCOM; // Храним выбранный COM port
+		
 		ConfigDialog(void)
 		{
 			InitializeComponent();
@@ -38,9 +40,9 @@ namespace tst {
 				delete components;
 			}
 		}
+
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::ComboBox^  comList;
-
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  connectStatus;
@@ -49,8 +51,6 @@ namespace tst {
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel3;
 	private: System::Windows::Forms::ToolStripStatusLabel^  statusCOM;
 	private: System::Windows::Forms::Label^  label1;
-
-
 	private: System::ComponentModel::IContainer^  components;
 
 #pragma region Windows Form Designer generated code
@@ -60,108 +60,108 @@ namespace tst {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = (gcnew System::ComponentModel::Container());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->comList = (gcnew System::Windows::Forms::ComboBox());
-			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
-			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->connectStatus = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->toolStripStatusLabel2 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->toolStripStatusLabel3 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->statusCOM = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->Serial = (gcnew System::IO::Ports::SerialPort(this->components));
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->statusStrip1->SuspendLayout();
-			this->SuspendLayout();
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(120, 46);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(81, 23);
-			this->button1->TabIndex = 3;
-			this->button1->Text = L"Сохранить";
-			this->button1->Click += gcnew System::EventHandler(this, &ConfigDialog::button1_Click);
-			// 
-			// comList
-			// 
-			this->comList->FormattingEnabled = true;
-			this->comList->Location = System::Drawing::Point(106, 10);
-			this->comList->Name = L"comList";
-			this->comList->Size = System::Drawing::Size(205, 21);
-			this->comList->TabIndex = 1;
-			// 
-			// statusStrip1
-			// 
-			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripStatusLabel1, 
-				this->connectStatus, this->toolStripStatusLabel2, this->toolStripStatusLabel3, this->statusCOM});
-			this->statusStrip1->Location = System::Drawing::Point(0, 81);
-			this->statusStrip1->Name = L"statusStrip1";
-			this->statusStrip1->Size = System::Drawing::Size(323, 22);
-			this->statusStrip1->TabIndex = 2;
-			this->statusStrip1->Text = L"statusStrip1";
-			// 
-			// toolStripStatusLabel1
-			// 
-			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(0, 17);
-			// 
-			// connectStatus
-			// 
-			this->connectStatus->Name = L"connectStatus";
-			this->connectStatus->Size = System::Drawing::Size(0, 17);
-			// 
-			// toolStripStatusLabel2
-			// 
-			this->toolStripStatusLabel2->Name = L"toolStripStatusLabel2";
-			this->toolStripStatusLabel2->Size = System::Drawing::Size(0, 17);
-			// 
-			// toolStripStatusLabel3
-			// 
-			this->toolStripStatusLabel3->Name = L"toolStripStatusLabel3";
-			this->toolStripStatusLabel3->Size = System::Drawing::Size(144, 17);
-			this->toolStripStatusLabel3->Text = L"Состояние контроллера:";
-			// 
-			// statusCOM
-			// 
-			this->statusCOM->Name = L"statusCOM";
-			this->statusCOM->Size = System::Drawing::Size(101, 17);
-			this->statusCOM->Text = L"НЕ ПОДКЛЮЧЕН";
-			// 
-			// Serial
-			// 
-			this->Serial->BaudRate = 115200;
-			this->Serial->DiscardNull = true;
-			this->Serial->ReadTimeout = 50;
-			this->Serial->WriteTimeout = 50;
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(5, 13);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(95, 13);
-			this->label1->TabIndex = 4;
-			this->label1->Text = L"Порт устройства:";
-			// 
-			// ConfigDialog
-			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(323, 103);
-			this->Controls->Add(this->label1);
-			this->Controls->Add(this->statusStrip1);
-			this->Controls->Add(this->comList);
-			this->Controls->Add(this->button1);
-			this->Name = L"ConfigDialog";
-			this->Text = L"Настройки подключения";
-			this->Load += gcnew System::EventHandler(this, &ConfigDialog::ConfigDialog_Load);
-			this->statusStrip1->ResumeLayout(false);
-			this->statusStrip1->PerformLayout();
-			this->ResumeLayout(false);
-			this->PerformLayout();
+		this->components = (gcnew System::ComponentModel::Container());
+		this->button1 = (gcnew System::Windows::Forms::Button());
+		this->comList = (gcnew System::Windows::Forms::ComboBox());
+		this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
+		this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->connectStatus = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->toolStripStatusLabel2 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->toolStripStatusLabel3 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->statusCOM = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->Serial = (gcnew System::IO::Ports::SerialPort(this->components));
+		this->label1 = (gcnew System::Windows::Forms::Label());
+		this->statusStrip1->SuspendLayout();
+		this->SuspendLayout();
+		// 
+		// button1
+		// 
+		this->button1->Location = System::Drawing::Point(120, 46);
+		this->button1->Name = L"button1";
+		this->button1->Size = System::Drawing::Size(81, 23);
+		this->button1->TabIndex = 3;
+		this->button1->Text = L"Сохранить";
+		this->button1->Click += gcnew System::EventHandler(this, &ConfigDialog::button1_Click);
+		// 
+		// comList
+		// 
+		this->comList->FormattingEnabled = true;
+		this->comList->Location = System::Drawing::Point(106, 10);
+		this->comList->Name = L"comList";
+		this->comList->Size = System::Drawing::Size(205, 21);
+		this->comList->TabIndex = 1;
+		// 
+		// statusStrip1
+		// 
+		this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripStatusLabel1, 
+			this->connectStatus, this->toolStripStatusLabel2, this->toolStripStatusLabel3, this->statusCOM});
+		this->statusStrip1->Location = System::Drawing::Point(0, 81);
+		this->statusStrip1->Name = L"statusStrip1";
+		this->statusStrip1->Size = System::Drawing::Size(323, 22);
+		this->statusStrip1->TabIndex = 2;
+		this->statusStrip1->Text = L"statusStrip1";
+		// 
+		// toolStripStatusLabel1
+		// 
+		this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
+		this->toolStripStatusLabel1->Size = System::Drawing::Size(0, 17);
+		// 
+		// connectStatus
+		// 
+		this->connectStatus->Name = L"connectStatus";
+		this->connectStatus->Size = System::Drawing::Size(0, 17);
+		// 
+		// toolStripStatusLabel2
+		// 
+		this->toolStripStatusLabel2->Name = L"toolStripStatusLabel2";
+		this->toolStripStatusLabel2->Size = System::Drawing::Size(0, 17);
+		// 
+		// toolStripStatusLabel3
+		// 
+		this->toolStripStatusLabel3->Name = L"toolStripStatusLabel3";
+		this->toolStripStatusLabel3->Size = System::Drawing::Size(144, 17);
+		this->toolStripStatusLabel3->Text = L"Состояние контроллера:";
+		// 
+		// statusCOM
+		// 
+		this->statusCOM->Name = L"statusCOM";
+		this->statusCOM->Size = System::Drawing::Size(101, 17);
+		this->statusCOM->Text = L"НЕ ПОДКЛЮЧЕН";
+		// 
+		// Serial
+		// 
+		this->Serial->BaudRate = 115200;
+		this->Serial->DiscardNull = true;
+		this->Serial->ReadTimeout = 50;
+		this->Serial->WriteTimeout = 50;
+		// 
+		// label1
+		// 
+		this->label1->AutoSize = true;
+		this->label1->Location = System::Drawing::Point(5, 13);
+		this->label1->Name = L"label1";
+		this->label1->Size = System::Drawing::Size(95, 13);
+		this->label1->TabIndex = 4;
+		this->label1->Text = L"Порт устройства:";
+		// 
+		// ConfigDialog
+		// 
+		this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+		this->ClientSize = System::Drawing::Size(323, 103);
+		this->Controls->Add(this->label1);
+		this->Controls->Add(this->statusStrip1);
+		this->Controls->Add(this->comList);
+		this->Controls->Add(this->button1);
+		this->Name = L"ConfigDialog";
+		this->Text = L"Настройки подключения";
+		this->Load += gcnew System::EventHandler(this, &ConfigDialog::ConfigDialog_Load);
+		this->statusStrip1->ResumeLayout(false);
+		this->statusStrip1->PerformLayout();
+		this->ResumeLayout(false);
+		this->PerformLayout();
 
-		}
+			}
 #pragma endregion
 
 //Функции самописные
@@ -208,7 +208,7 @@ namespace tst {
 
 
 
-	private: System::Void ConfigDialog_Load(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void ConfigDialog_Load(System::Object^  sender, System::EventArgs^  e) {
 
 	getCOMPorts(); // Получение списка COM портов
 }
@@ -217,32 +217,10 @@ namespace tst {
 
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	 
-			 
+			this->statusCOM->Text = Convert::ToString(comList->SelectedItem);
+			selectedCOM = Convert::ToString(comList->SelectedItem);
+			this->statusCOM->Text = "COM порт сохранён: " + selectedCOM;
 
-// Сохранение выбранного COM порта в файл
-this->statusCOM->Text = Convert::ToString(comList->SelectedItem);
-
-String^ filePath = "C:\\Mach3\\PlugIns\\ControlPult.txt";
-
-if (!System::IO::File::Exists(filePath)) {
-	
-    System::IO::File::Create(filePath)->Close();
-}
-
-System::IO::StreamWriter^ outputFile = gcnew System::IO::StreamWriter(filePath);
-outputFile->WriteLine(comList->SelectedItem);
-this->statusCOM->Text = "COM порт сохранён";
-outputFile->Close();
-//---Сохранение выбранного COM порта в файл---------
-
-
-
-
-
-
-	}
-
-
-
-};
+		 }
+	};
 }
