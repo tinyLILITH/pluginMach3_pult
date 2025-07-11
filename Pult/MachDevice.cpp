@@ -169,6 +169,7 @@ _CMach4View			*MachView;		// used for most framework and configuration calls
 
 extern "C" __declspec(dllexport) void SetGetMenuRange(IntShort pFunc)
 {
+	
    GetMenuRange = pFunc; 
 }
 
@@ -197,7 +198,7 @@ extern "C" __declspec(dllexport) bool InitControl( void *oEngine , void *oSetup 
 #else
 	startPrinter = true;
 #endif
-
+	
 	return startPrinter;
 }
 

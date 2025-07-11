@@ -7,6 +7,8 @@ using namespace System::Collections;
 using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
+using namespace System::Management;
+
 
 namespace tst {
 
@@ -24,6 +26,7 @@ namespace tst {
 	public:
 		static String^ selectedCOM; // Храним выбранный COM port
 	private: System::Windows::Forms::CheckBox^  checkBox1;
+	private: System::Windows::Forms::ComboBox^  comboBox1;
 	public: 
 		array<String^> ^availableCOMPorts;
 		ConfigDialog(void)
@@ -63,101 +66,110 @@ namespace tst {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = (gcnew System::ComponentModel::Container());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
-			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->connectStatus = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->toolStripStatusLabel2 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->toolStripStatusLabel3 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->statusCOM = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->Serial = (gcnew System::IO::Ports::SerialPort(this->components));
-			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
-			this->statusStrip1->SuspendLayout();
-			this->SuspendLayout();
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(12, 12);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(81, 23);
-			this->button1->TabIndex = 3;
-			this->button1->Text = L"Сохранить";
-			this->button1->Click += gcnew System::EventHandler(this, &ConfigDialog::button1_Click);
-			// 
-			// statusStrip1
-			// 
-			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripStatusLabel1, 
-				this->connectStatus, this->toolStripStatusLabel2, this->toolStripStatusLabel3, this->statusCOM});
-			this->statusStrip1->Location = System::Drawing::Point(0, 81);
-			this->statusStrip1->Name = L"statusStrip1";
-			this->statusStrip1->Size = System::Drawing::Size(323, 22);
-			this->statusStrip1->TabIndex = 2;
-			this->statusStrip1->Text = L"statusStrip1";
-			// 
-			// toolStripStatusLabel1
-			// 
-			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(0, 17);
-			// 
-			// connectStatus
-			// 
-			this->connectStatus->Name = L"connectStatus";
-			this->connectStatus->Size = System::Drawing::Size(0, 17);
-			// 
-			// toolStripStatusLabel2
-			// 
-			this->toolStripStatusLabel2->Name = L"toolStripStatusLabel2";
-			this->toolStripStatusLabel2->Size = System::Drawing::Size(0, 17);
-			// 
-			// toolStripStatusLabel3
-			// 
-			this->toolStripStatusLabel3->Name = L"toolStripStatusLabel3";
-			this->toolStripStatusLabel3->Size = System::Drawing::Size(144, 17);
-			this->toolStripStatusLabel3->Text = L"Состояние контроллера:";
-			// 
-			// statusCOM
-			// 
-			this->statusCOM->Name = L"statusCOM";
-			this->statusCOM->Size = System::Drawing::Size(101, 17);
-			this->statusCOM->Text = L"НЕ ПОДКЛЮЧЕН";
-			// 
-			// Serial
-			// 
-			this->Serial->BaudRate = 115200;
-			this->Serial->DiscardNull = true;
-			this->Serial->DtrEnable = true;
-			this->Serial->PortName = L"COM4";
-			this->Serial->ReadTimeout = 1000;
-			this->Serial->WriteTimeout = 1000;
-			// 
-			// checkBox1
-			// 
-			this->checkBox1->AutoSize = true;
-			this->checkBox1->Location = System::Drawing::Point(210, 16);
-			this->checkBox1->Name = L"checkBox1";
-			this->checkBox1->Size = System::Drawing::Size(101, 17);
-			this->checkBox1->TabIndex = 4;
-			this->checkBox1->Text = L"Включить DTR";
-			this->checkBox1->UseVisualStyleBackColor = true;
-			// 
-			// ConfigDialog
-			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(323, 103);
-			this->Controls->Add(this->checkBox1);
-			this->Controls->Add(this->statusStrip1);
-			this->Controls->Add(this->button1);
-			this->Name = L"ConfigDialog";
-			this->Text = L"Настройки подключения";
-			this->Load += gcnew System::EventHandler(this, &ConfigDialog::ConfigDialog_Load);
-			this->statusStrip1->ResumeLayout(false);
-			this->statusStrip1->PerformLayout();
-			this->ResumeLayout(false);
-			this->PerformLayout();
+		this->components = (gcnew System::ComponentModel::Container());
+		this->button1 = (gcnew System::Windows::Forms::Button());
+		this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
+		this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->connectStatus = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->toolStripStatusLabel2 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->toolStripStatusLabel3 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->statusCOM = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+		this->Serial = (gcnew System::IO::Ports::SerialPort(this->components));
+		this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
+		this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+		this->statusStrip1->SuspendLayout();
+		this->SuspendLayout();
+		// 
+		// button1
+		// 
+		this->button1->Location = System::Drawing::Point(235, 12);
+		this->button1->Name = L"button1";
+		this->button1->Size = System::Drawing::Size(81, 23);
+		this->button1->TabIndex = 3;
+		this->button1->Text = L"Сохранить";
+		this->button1->Click += gcnew System::EventHandler(this, &ConfigDialog::button1_Click);
+		// 
+		// statusStrip1
+		// 
+		this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripStatusLabel1, 
+			this->connectStatus, this->toolStripStatusLabel2, this->toolStripStatusLabel3, this->statusCOM});
+		this->statusStrip1->Location = System::Drawing::Point(0, 81);
+		this->statusStrip1->Name = L"statusStrip1";
+		this->statusStrip1->Size = System::Drawing::Size(323, 22);
+		this->statusStrip1->TabIndex = 2;
+		this->statusStrip1->Text = L"statusStrip1";
+		// 
+		// toolStripStatusLabel1
+		// 
+		this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
+		this->toolStripStatusLabel1->Size = System::Drawing::Size(0, 17);
+		// 
+		// connectStatus
+		// 
+		this->connectStatus->Name = L"connectStatus";
+		this->connectStatus->Size = System::Drawing::Size(0, 17);
+		// 
+		// toolStripStatusLabel2
+		// 
+		this->toolStripStatusLabel2->Name = L"toolStripStatusLabel2";
+		this->toolStripStatusLabel2->Size = System::Drawing::Size(0, 17);
+		// 
+		// toolStripStatusLabel3
+		// 
+		this->toolStripStatusLabel3->Name = L"toolStripStatusLabel3";
+		this->toolStripStatusLabel3->Size = System::Drawing::Size(144, 17);
+		this->toolStripStatusLabel3->Text = L"Состояние контроллера:";
+		// 
+		// statusCOM
+		// 
+		this->statusCOM->Name = L"statusCOM";
+		this->statusCOM->Size = System::Drawing::Size(101, 17);
+		this->statusCOM->Text = L"НЕ ПОДКЛЮЧЕН";
+		// 
+		// Serial
+		// 
+		this->Serial->BaudRate = 115200;
+		this->Serial->DiscardNull = true;
+		this->Serial->DtrEnable = true;
+		this->Serial->PortName = L"COM4";
+		this->Serial->ReadTimeout = 1000;
+		this->Serial->WriteTimeout = 1000;
+		// 
+		// checkBox1
+		// 
+		this->checkBox1->AutoSize = true;
+		this->checkBox1->Location = System::Drawing::Point(215, 41);
+		this->checkBox1->Name = L"checkBox1";
+		this->checkBox1->Size = System::Drawing::Size(101, 17);
+		this->checkBox1->TabIndex = 4;
+		this->checkBox1->Text = L"Включить DTR";
+		this->checkBox1->UseVisualStyleBackColor = true;
+		// 
+		// comboBox1
+		// 
+		this->comboBox1->Location = System::Drawing::Point(12, 12);
+		this->comboBox1->Name = L"comboBox1";
+		this->comboBox1->Size = System::Drawing::Size(217, 21);
+		this->comboBox1->TabIndex = 0;
+		// 
+		// ConfigDialog
+		// 
+		this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+		this->ClientSize = System::Drawing::Size(323, 103);
+		this->Controls->Add(this->comboBox1);
+		this->Controls->Add(this->checkBox1);
+		this->Controls->Add(this->statusStrip1);
+		this->Controls->Add(this->button1);
+		this->Name = L"ConfigDialog";
+		this->Text = L"Настройки подключения";
+		this->Load += gcnew System::EventHandler(this, &ConfigDialog::ConfigDialog_Load);
+		this->statusStrip1->ResumeLayout(false);
+		this->statusStrip1->PerformLayout();
+		this->ResumeLayout(false);
+		this->PerformLayout();
 
-		}
+			}
 #pragma endregion
 
 //Функции самописные
@@ -179,43 +191,105 @@ void writeSetting(String^ node, String^ parametr){
 } 
  
  
-void getCOMPorts(){
-    array<String^> ^AvailableSerialPorts;
-    array<unsigned char> ^aTemp;
-    String ^sTemp;
 
-    try
-    {
-//        comList->Items->Clear();
-        AvailableSerialPorts = this->Serial->GetPortNames();
-        availableCOMPorts = AvailableSerialPorts;  // Сохраняем порты в глобальную переменную
+void getCOMPorts() {
+    comboBox1->Items->Clear();  // Очистка списка
 
-        for(int Count = 0; Count < AvailableSerialPorts->Length; Count++)
-        {
-            sTemp = AvailableSerialPorts[Count];
+    try {
+        // Поиск всех устройств с COM в названии
+        ManagementObjectSearcher^ searcher = gcnew ManagementObjectSearcher(
+            "SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
 
-            // Убираем любые нецифровые символы в конце порта (например, добавленные драйверами Bluetooth)
-            aTemp = System::Text::Encoding::UTF8->GetBytes(sTemp);
-            while ((aTemp->Length > 1) && ((aTemp[(aTemp->Length - 1)] < '0') || (aTemp[(aTemp->Length - 1)] > '9')))
-            {
-                Array::Resize(aTemp, (aTemp->Length - 1));
+        for each (ManagementObject^ obj in searcher->Get()) {
+            String^ name = obj["Name"]->ToString();             // "USB Serial Device (COM3)"
+            String^ deviceID = obj["PNPDeviceID"]->ToString();  // "USB\\VID_2E8A&PID_000A\\PULT01"
+
+            // Извлечение COM-порта
+            int comIndex = name->LastIndexOf("COM");
+            if (comIndex < 0) continue;
+            String^ comPort = name->Substring(comIndex)->TrimEnd(')');
+
+            // Поиск по VID/PID для RP2040 (или твоего устройства)
+            if (deviceID->Contains("VID_2E8A") && deviceID->Contains("PID_0003")) {
+                String^ friendlyName = "RP2040";
+
+                // Извлечение серийного номера
+                int serialIndex = deviceID->LastIndexOf("\\");
+                if (serialIndex >= 0 && serialIndex + 1 < deviceID->Length) {
+                    String^ serial = deviceID->Substring(serialIndex + 1);
+
+                    // Назначаем имя по сериалу
+                    if (serial == "PULT01") {
+                        friendlyName = "Mach3 Control Pult";
+                    }
+                    else if (serial == "SENSOR01") {
+                        friendlyName = "Sensor Board";
+                    }
+                    else {
+                        friendlyName = "RP2040 Unknown (" + serial + ")";
+                    }
+                }
+
+                comboBox1->Items->Add(friendlyName + " (" + comPort + ")");
             }
-            sTemp = System::Text::Encoding::UTF8->GetString(aTemp);
-
-//            comList->Items->Add(sTemp);
+            else {
+                // Добавляем прочие COM-порты с оригинальным именем
+                comboBox1->Items->Add(name);
+            }
         }
-//        comList->SelectedIndex = 0;
-    }
-    catch(System::Exception^ e)
-    {
-        e->Message;
+
+        if (comboBox1->Items->Count > 0)
+            comboBox1->SelectedIndex = 0;
+        else
+            comboBox1->Items->Add("Нет доступных устройств");
+
+    } catch (Exception^ ex) {
+        MessageBox::Show("Ошибка при получении COM-портов: " + ex->Message);
     }
 }
+
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
+{
+    // Проверка: выбран ли элемент
+    if (this->comboBox1->SelectedItem == nullptr)
+    {
+        MessageBox::Show("COM порт не выбран.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+        return;
+    }
+
+    String^ selectedCOM = this->comboBox1->SelectedItem->ToString();
+
+    // Проверка: строка не пустая
+    if (!String::IsNullOrEmpty(selectedCOM) && selectedCOM->Trim()->Length > 0)
+    {
+        // Сохраняем выбранный порт в глобальную переменную (если MG::currentCOM используется)
+
+        // Отправляем команду
+        String^ response = sendMessageAndWaitForResponse("?PURDY$");
+
+        if (!String::IsNullOrEmpty(response) && response->Trim()->Length > 0)
+        {
+            writeSetting("PORT", response);
+        }
+        else															
+        {
+            MessageBox::Show("Не удалось получить ответ от микроконтроллера.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        }
+    }
+}
+
+
 
  
 
 String^ sendMessageAndWaitForResponse(String^ message)
 {
+if (this->Serial == nullptr)
+    this->Serial = gcnew System::IO::Ports::SerialPort();
+
+if (this->availableCOMPorts == nullptr || this->availableCOMPorts->Length == 0)
+    this->availableCOMPorts = System::IO::Ports::SerialPort::GetPortNames();
+    
     String^ response = "";
     bool success = false;
     String^ selectedCOM = "";  // Переменная для хранения имени порта
@@ -338,6 +412,6 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 		 
 		 
 		 
-		 
-	};	 
+
+};	 
 }
