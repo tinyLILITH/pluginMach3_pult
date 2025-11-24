@@ -201,7 +201,7 @@
 			MinFrameworkVersion="131072"
 		/>
 		<AssemblyReference
-			RelativePath="..\..\..\..\..\..\..\Mach3\Interop.Mach4.1.0.dll"
+			RelativePath=".\Interop\Interop.Mach4.1.0.dll"
 			AssemblyName="Interop.Mach4.1.0, Version=1.0.0.0, processorArchitecture=MSIL"
 			MinFrameworkVersion="131072"
 		/>
@@ -282,6 +282,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Commands.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ConfigDialog.h"
 				FileType="3"
 				>
@@ -319,10 +323,6 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\tst.h"
 				>
 			</File>
 			<File

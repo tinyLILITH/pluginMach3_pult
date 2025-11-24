@@ -1,4 +1,5 @@
 #pragma once;
+#include "Commands.h"
 #include "XMLNetProfile.h"
 #include "MachDevice.h"
 using namespace System;
@@ -24,7 +25,7 @@ namespace tst {
 	public ref class ConfigDialog : public System::Windows::Forms::Form
 	{
 	public:
-		static String^ selectedCOM; // Храним выбранный COM port
+	static String^ selectedCOM = "";
 	private: System::Windows::Forms::CheckBox^  checkBox1;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
 	public: 
@@ -48,7 +49,6 @@ namespace tst {
 		}
 
 	private: System::Windows::Forms::Button^  button1;
-
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  connectStatus;
@@ -61,7 +61,7 @@ namespace tst {
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// Required method for Designer support - do not modify
+		/// Required method for Designer supSerial - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
 		void InitializeComponent(void)
@@ -77,6 +77,8 @@ namespace tst {
 		this->Serial = (gcnew System::IO::Ports::SerialPort(this->components));
 		this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 		this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+		//this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &ConfigDialog::comboBox1_SelectedIndexChanged);
+
 		this->statusStrip1->SuspendLayout();
 		this->SuspendLayout();
 		// 
@@ -250,152 +252,85 @@ void getCOMPorts() {
 
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
 {
-    // Проверка: выбран ли элемент
     if (this->comboBox1->SelectedItem == nullptr)
     {
         MessageBox::Show("COM порт не выбран.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
         return;
     }
 
-    String^ selectedCOM = this->comboBox1->SelectedItem->ToString();
+    // Извлекаем COMx из строки, например: "Mach3 Control Pult (COM4)"
+    String^ selectedText = this->comboBox1->SelectedItem->ToString();
+    int start = selectedText->LastIndexOf("COM");
+    if (start < 0) return;
 
-    // Проверка: строка не пустая
-    if (!String::IsNullOrEmpty(selectedCOM) && selectedCOM->Trim()->Length > 0)
+    int end = selectedText->IndexOf(")", start);
+    if (end < 0) end = selectedText->Length;
+
+    selectedCOM = selectedText->Substring(start, end - start);
+
+    // Отправляем команду и сохраняем, если всё ок
+    String^ response = sendMessageAndWaitForResponse(selectedCOM, CMD_PURDY);
+
+    if (!String::IsNullOrEmpty(response) && response->Trim()->Length > 0)
     {
-        // Сохраняем выбранный порт в глобальную переменную (если MG::currentCOM используется)
-
-        // Отправляем команду
-        String^ response = sendMessageAndWaitForResponse("?PURDY$");
-
-        if (!String::IsNullOrEmpty(response) && response->Trim()->Length > 0)
-        {
-            writeSetting("PORT", response);
-        }
-        else															
-        {
-            MessageBox::Show("Не удалось получить ответ от микроконтроллера.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error);
-        }
+        writeSetting("PORT", selectedCOM); // сохраняем правильный COM
+    }
+    else															
+    {
+        MessageBox::Show("Не удалось получить ответ от микроконтроллера.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error);
     }
 }
+
 
 
 
  
 
-String^ sendMessageAndWaitForResponse(String^ message)
+String^ sendMessageAndWaitForResponse(String^ SerialName, String^ message)
 {
-if (this->Serial == nullptr)
-    this->Serial = gcnew System::IO::Ports::SerialPort();
-
-if (this->availableCOMPorts == nullptr || this->availableCOMPorts->Length == 0)
-    this->availableCOMPorts = System::IO::Ports::SerialPort::GetPortNames();
-    
     String^ response = "";
-    bool success = false;
-    String^ selectedCOM = "";  // Переменная для хранения имени порта
+    
 
     try
     {
-        // Перебираем все доступные порты
-        for (int i = 0; i < availableCOMPorts->Length; i++)
+        Serial->PortName = SerialName;
+        Serial->BaudRate = 115200; // Замените на вашу
+        Serial->ReadTimeout = 2000;
+        Serial->NewLine = "\r\n"; // Проверьте нужный символ
+
+        Serial->Open();
+
+        Serial->DiscardInBuffer();
+        Serial->DiscardOutBuffer();
+
+        array<unsigned char>^ command = System::Text::Encoding::ASCII->GetBytes(message + Serial->NewLine);
+        Serial->Write(command, 0, command->Length);
+
+        response = Serial->ReadLine();
+
+        this->statusCOM->Text = "Ответ: " + response;
+
+        if (response->Contains(RESP_PUOK))
         {
-            String^ portName = availableCOMPorts[i];
-
-            try
-            {
-                // Проверка, открыт ли порт
-                if (this->Serial->IsOpen)
-                {
-                    this->Serial->Close();  // Закрываем порт, если он открыт
-                }
-
-                // Устанавливаем имя порта
-                this->Serial->PortName = portName;
-
-                try
-                {
-                    // Попытка открыть порт
-                    this->Serial->Open();
-                }
-                catch (UnauthorizedAccessException^ ex)
-                {
-                    // Ошибка доступа (порт уже занят другим процессом)
-                    this->statusCOM->Text = "Порт " + portName + " занят другим процессом.";
-                    continue;  // Переход к следующему порту
-                }
-                catch (System::Exception^ ex)
-                {
-                    // Другие ошибки при попытке открыть порт
-                    this->statusCOM->Text = "Ошибка при открытии порта " + portName + ": " + ex->Message;
-                    continue;  // Переход к следующему порту
-                }
-
-                // Установим таймаут для чтения данных
-                this->Serial->ReadTimeout = 1000;  // Таймаут чтения 5 секунд
-
-                // Отправка сообщения
-                array<unsigned char>^ command = System::Text::Encoding::ASCII->GetBytes(message + this->Serial->NewLine);
-                this->Serial->Write(command, 0, command->Length);
-
-                // Ожидание ответа
-                try
-                {
-                    response = this->Serial->ReadLine();  // Чтение ответа от устройства
-                    this->statusCOM->Text = "Ответ: " + response;  // Логируем ответ
-
-                    // Если ответ соответствует ожидаемому
-                    if (response->Contains("!PUOK$"))
-                    {
-                        selectedCOM = portName;
-                        this->statusCOM->Text = "Ответ получен с порта " + selectedCOM + ": " + response;
-                        success = true;
-                        break;  // Выход из цикла при успешном ответе
-                    }
-                    else
-                    {
-                        // Если ответ не соответствует ожидаемому
-                        this->statusCOM->Text = "Ответ не соответствует ожидаемому на порте " + portName + ": " + response;
-                        //this->Serial->Close();  // Закрываем порт
-                    }
-                }
-                catch (TimeoutException^ ex)
-                {
-                    // Таймаут при ожидании ответа
-                    this->statusCOM->Text = "Таймаут при ожидании ответа от устройства на порте " + portName;
-                    this->Serial->Close();  // Закрываем порт
-                }
-                catch (System::Exception^ ex)
-                {
-                    // Ошибка при чтении данных с порта
-                    this->statusCOM->Text = "Ошибка при чтении данных с порта " + portName + ": " + ex->Message;
-                    this->Serial->Close();  // Закрываем порт
-                }
-            }
-            catch (Exception^ ex)
-            {
-                // Обработка ошибок при работе с портом
-                this->statusCOM->Text = "Ошибка на порте " + portName + ": " + ex->Message;
-            }
+            return SerialName;
         }
-
-        if (!success)
+        else
         {
-            this->statusCOM->Text = "Ответ не получен на всех портах.";
-            MessageBox::Show("Ответ не получен на всех портах.");
+            return "";
         }
     }
     catch (Exception^ ex)
     {
         this->statusCOM->Text = "Ошибка: " + ex->Message;
-        MessageBox::Show("Ошибка: " + ex->Message);
+        return "";
     }
-
-    // Здесь можно использовать selectedCOM, например, для дальнейших операций
-    if (selectedCOM != "")
+    finally
     {
-     return selectedCOM;
+        if (Serial->IsOpen)
+            Serial->Close();
     }
 }
+
 
 private: System::Void ConfigDialog_Load(System::Object^  sender, System::EventArgs^  e) {
 
@@ -404,13 +339,39 @@ getCOMPorts();
 
 
 
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-	   
-	   writeSetting("PORT", sendMessageAndWaitForResponse("?PURDY$"));
-	   
- }
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+    if (comboBox1->SelectedItem == nullptr)
+    {
+        MessageBox::Show("COM порт не выбран.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+        return;
+    }
+
+    // Извлекаем COMx из строки
+    String^ selectedText = comboBox1->SelectedItem->ToString();
+    int start = selectedText->LastIndexOf("COM");
+    if (start < 0) return;
+
+    int end = selectedText->IndexOf(")", start);
+    if (end < 0) end = selectedText->Length;
+
+    selectedCOM = selectedText->Substring(start, end - start);
+
+    String^ response = sendMessageAndWaitForResponse(selectedCOM, CMD_PURDY);
+
+    if (!String::IsNullOrEmpty(response))
+    {
+        writeSetting("PORT", selectedCOM);
+    }
+    else
+    {
+        MessageBox::Show("Нет ответа от устройства.", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error);
+    }
+}
+
+
+
 		 
-		 
+	 
 		 
 
 };	 

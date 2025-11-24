@@ -16,6 +16,7 @@
 
 using namespace tst;
 using namespace System;
+
 namespace tst
 {
 
@@ -33,17 +34,60 @@ namespace tst
 		static String^ currentCOM = "";
 		static String^ lastRcvMessage = "";	 //recive message from microcontroller
 		static String^ initLPTPower = ""; //Подтверждение на включение реле
-		static int toolChange = 0;
+		/*
+		literal System::String^ CMD_LPT_ON		 = "?LPTON$\n";
+		literal System::String^ CMD_DRV_ON		 = "?DRVON$\n";
+		literal System::String^ CMD_DRV_OFF		 = "?DRVOFF$\n";
+		literal System::String^ CMD_ERLS		 = "?ERLS$\n";
+		literal System::String^ CMD_JOG_STOP     = "?JOGSTP$";
+
+		literal System::String^ RESP_LPT_ON		 = "!LPTON$";
+		literal System::String^ RESP_DRV_ON		 = "!DRVON$";
+		literal System::String^ RESP_DRV_OFF	 = "!DRVOFF$";
+		literal System::String^ RESP_ERLS		 = "!ERLS$";
+		literal System::String^ RESP_ESTOP		 = "!ESTP$";
+		literal System::String^ RESP_PUOK		 = "!PUOK$";
+		  */
 		
+		};
+}
+#endif
 
+		
+/*		
+#ifdef _MANAGED
+#pragma managed
 
-		//static String^ updRequestCOM = "";
-		//static String^ axisSelected = "!aX$"; //Ось выбранная по умолчанию
-		//static double userJogOverride = 0; //Процентное соотношение скорости (не используется, нужно для энкодера)
+using namespace System;
 
+namespace tst
+{
+	public ref class MG
+	{
+	public:
+		// Объявляем переменные, но НЕ инициализируем
+		static PlugInControlDialog^ PCD;
+		static ConfigDialog^ CD;
+		static IMach4^ _mach;
+		static IMyScriptObject^ _mInst;
+		static bool initComplete;
+		static String^ currentCOM;
+		static String^ lastRcvMessage;
+		static String^ initLPTPower;
 
+		literal System::String^ CMD_LPT_ON = "?LPTON$\n";
+		literal System::String^ CMD_DRV_ON = "?DRVON$\n";
+		literal System::String^ CMD_DRV_OFF = "?DRVOFF$\n";
+		literal System::String^ CMD_ERLS = "?ERLS$\n";
+		literal System::String^ CMD_JOG_STOP = "?JOGSTP$";
 
-
+		literal System::String^ RESP_LPT_ON = "!LPTON$";
+		literal System::String^ RESP_DRV_ON = "!DRVON$";
+		literal System::String^ RESP_DRV_OFF = "!DRVOFF$";
+		literal System::String^ RESP_ERLS = "!ERLS$";
+		literal System::String^ RESP_ESTOP = "!ESTP$";
+		literal System::String^ RESP_PUOK = "!PUOK$";
 	};
 }
 #endif
+	   */
