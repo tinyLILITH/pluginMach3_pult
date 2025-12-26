@@ -146,7 +146,7 @@ namespace tst {
 		// statusCOM
 		// 
 		this->statusCOM->Name = L"statusCOM";
-		this->statusCOM->Size = System::Drawing::Size(101, 17);
+		this->statusCOM->Size = System::Drawing::Size(100, 17);
 		this->statusCOM->Text = L"ÍÅ ÏÎÄÊËÞ×ÅÍ";
 		// 
 		// Serial
@@ -163,7 +163,7 @@ namespace tst {
 		this->checkBox1->AutoSize = true;
 		this->checkBox1->Location = System::Drawing::Point(215, 41);
 		this->checkBox1->Name = L"checkBox1";
-		this->checkBox1->Size = System::Drawing::Size(101, 17);
+		this->checkBox1->Size = System::Drawing::Size(100, 17);
 		this->checkBox1->TabIndex = 4;
 		this->checkBox1->Text = L"Âêëþ÷èòü DTR";
 		this->checkBox1->UseVisualStyleBackColor = true;

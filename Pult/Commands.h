@@ -25,6 +25,7 @@
 
 // Ответы от устройства
 #define RESP_LPT_ON            "!LPTON$"
+#define RESP_LPT_OFF           "!LPTOFF$"
 #define RESP_DRV_ON            "!DRVON$"
 #define RESP_DRV_OFF           "!DRVOFF$"
 #define RESP_ERLS			   "!ERLS$"
@@ -38,3 +39,9 @@
 #define LED_ALM_Z             1002
 #define LED_PURDY			  1003
 #define LED_DRVCHECK		  1004
+#define LED_LPTCHECK		  1005
+
+
+//Переменные mach3 для сохранения состояния работы
+#define DRV_VAR				  100
+#define LPT_VAR				  101

@@ -60,36 +60,6 @@ void setup() {
 //other signal (alarm stepper motor etc..)
   alarmX.setTickMode(AUTO);
   alarmZ.setTickMode(AUTO);
-
-
-  tone(buzzer, 329, 500);  // 329 for 500ms
-  delay(500);  // Wait for 500ms
-  
-  tone(buzzer, 392, 500);  // 392 for 500ms
-  delay(500);  // Wait for 500ms
-  
-  tone(buzzer, 261, 500);  // 261 for 500ms
-  delay(500);  // Wait for 500ms
-  
-  tone(buzzer, 329, 500);  // 329 for 500ms
-  delay(500);  // Wait for 500ms
-  
-  tone(buzzer, 294, 500);  // 294 for 500ms
-  delay(500);  // Wait for 500ms
-  
-  tone(buzzer, 392, 500);  // 392 for 500ms
-  delay(500);  // Wait for 500ms
-
-  tone(buzzer, 523, 500);  // 523 for 500ms (higher pitch)
-  delay(500);  // Wait for 500ms
-  
-  tone(buzzer, 440, 500);  // 440 for 500ms
-  delay(500);  // Wait for 500ms
-
-  noTone(buzzer);  // Turn off the sound
-  
-  delay(1000);  // Wait for a second before repeating the loop
-
 }
 
 void isr() {
