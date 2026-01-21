@@ -20,7 +20,7 @@ GButton buttCSS(2);
 GButton buttUCB1(3);
 GButton buttUCB2(4);
 GButton buttUCB3(5);
-GButton buttUC466(6);
+GButton buttUCB4(6);
 GButton buttUCB5(7);
 
 //other signal (alarm stepper motor etc..)
@@ -54,7 +54,7 @@ void setup() {
   buttUCB1.setTickMode(AUTO);
   buttUCB2.setTickMode(AUTO);
   buttUCB3.setTickMode(AUTO);
-  buttUC466.setTickMode(AUTO);
+  buttUCB4.setTickMode(AUTO);
   buttUCB5.setTickMode(AUTO);
 
 //other signal (alarm stepper motor etc..)
@@ -68,8 +68,8 @@ void isr() {
 
 void loop() {
 
-  if (buttESTP.isPress()) Serial.println("!ESTP$");
-  if (buttESTP.isRelease()) Serial.println("!ERLS$");
+  if (buttESTP.isPress()) Serial.println("!ERLS$");
+  if (buttESTP.isRelease()) Serial.println("!ESTP$");
 
   if (alarmX.isPress()) Serial.println("!ALMX$");
   if (alarmX.isRelease()) Serial.println("!ALMX_RLS$");
@@ -96,7 +96,7 @@ void loop() {
   if (buttUCB3.isClick()) {
     Serial.println("!UCB3$");
   }
-  if (buttUC466.isClick()) {
+  if (buttUCB4.isClick()) {
     Serial.println("!UC466$");
   }
 

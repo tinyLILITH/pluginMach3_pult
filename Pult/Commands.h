@@ -41,7 +41,11 @@
 #define LED_DRVCHECK		  1004
 #define LED_LPTCHECK		  1005
 
+//Пользовательские DRO
+#define CYCLE_COUNTER		  1516
+
 
 //Переменные mach3 для сохранения состояния работы
-#define DRV_VAR				  100
-#define LPT_VAR				  101
+#define DRV_VAR				      100   //variable stepper motor driver on/off
+#define LPT_VAR					  101	//variable lpt on/off
+#define CNT_VAR				      102   //variable counter for cycle start 

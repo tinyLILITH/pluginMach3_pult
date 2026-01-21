@@ -38,11 +38,18 @@ namespace tst
 		static   IMach4^ _mach = (IMach4^) Marshal::GetActiveObject("Mach4.Document");
 		static	 IMyScriptObject^ _mInst = (IMyScriptObject^) _mach->GetScriptDispatch();
 		static bool initComplete = false;  //flag init
-		static bool currentStateDRV = 0;
-		static bool currentStateLPT = 0;
-		static bool prevStateDRV = 0;
+		static bool currentStateDRV = false;
+		static bool currentStateLPT = false;
+		static bool prevStateDRV = false;
+		static bool XZSTOP = false;
 		
+		        // Заменяем массив на управляемый тип
+        static array<int>^ UserButtons = gcnew array<int>(6);
+        static int DetailCounter = 0;
+				
 		};
+		
+
 }
 #endif
 

@@ -39,6 +39,9 @@ namespace tst {
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::TextBox^  textBox2;
 	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::CheckBox^  checkBox2;
+	private: System::Windows::Forms::TextBox^  textBox6;
+	private: System::Windows::Forms::Label^  label6;
 	public: 
 		array<String^> ^availableCOMPorts;
 		ConfigDialog(void)
@@ -99,13 +102,16 @@ namespace tst {
 		this->label2 = (gcnew System::Windows::Forms::Label());
 		this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 		this->label1 = (gcnew System::Windows::Forms::Label());
+		this->checkBox2 = (gcnew System::Windows::Forms::CheckBox());
+		this->textBox6 = (gcnew System::Windows::Forms::TextBox());
+		this->label6 = (gcnew System::Windows::Forms::Label());
 		this->statusStrip1->SuspendLayout();
 		this->groupBox1->SuspendLayout();
 		this->SuspendLayout();
 		// 
 		// button1
 		// 
-		this->button1->Location = System::Drawing::Point(216, 99);
+		this->button1->Location = System::Drawing::Point(235, 210);
 		this->button1->Name = L"button1";
 		this->button1->Size = System::Drawing::Size(81, 23);
 		this->button1->TabIndex = 3;
@@ -116,7 +122,7 @@ namespace tst {
 		// 
 		this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripStatusLabel1, 
 			this->connectStatus, this->toolStripStatusLabel2, this->toolStripStatusLabel3, this->statusCOM});
-		this->statusStrip1->Location = System::Drawing::Point(0, 190);
+		this->statusStrip1->Location = System::Drawing::Point(0, 236);
 		this->statusStrip1->Name = L"statusStrip1";
 		this->statusStrip1->Size = System::Drawing::Size(323, 22);
 		this->statusStrip1->TabIndex = 2;
@@ -146,7 +152,7 @@ namespace tst {
 		// statusCOM
 		// 
 		this->statusCOM->Name = L"statusCOM";
-		this->statusCOM->Size = System::Drawing::Size(100, 17);
+		this->statusCOM->Size = System::Drawing::Size(101, 17);
 		this->statusCOM->Text = L"НЕ ПОДКЛЮЧЕН";
 		// 
 		// Serial
@@ -163,7 +169,7 @@ namespace tst {
 		this->checkBox1->AutoSize = true;
 		this->checkBox1->Location = System::Drawing::Point(215, 41);
 		this->checkBox1->Name = L"checkBox1";
-		this->checkBox1->Size = System::Drawing::Size(100, 17);
+		this->checkBox1->Size = System::Drawing::Size(101, 17);
 		this->checkBox1->TabIndex = 4;
 		this->checkBox1->Text = L"Включить DTR";
 		this->checkBox1->UseVisualStyleBackColor = true;
@@ -181,7 +187,6 @@ namespace tst {
 		this->groupBox1->Controls->Add(this->label5);
 		this->groupBox1->Controls->Add(this->textBox4);
 		this->groupBox1->Controls->Add(this->label4);
-		this->groupBox1->Controls->Add(this->button1);
 		this->groupBox1->Controls->Add(this->textBox3);
 		this->groupBox1->Controls->Add(this->label3);
 		this->groupBox1->Controls->Add(this->textBox2);
@@ -190,7 +195,7 @@ namespace tst {
 		this->groupBox1->Controls->Add(this->label1);
 		this->groupBox1->Location = System::Drawing::Point(13, 59);
 		this->groupBox1->Name = L"groupBox1";
-		this->groupBox1->Size = System::Drawing::Size(303, 128);
+		this->groupBox1->Size = System::Drawing::Size(303, 122);
 		this->groupBox1->TabIndex = 5;
 		this->groupBox1->TabStop = false;
 		this->groupBox1->Text = L"OEM-коды";
@@ -275,14 +280,44 @@ namespace tst {
 		this->label1->TabIndex = 0;
 		this->label1->Text = L"Кнопка 1";
 		// 
+		// checkBox2
+		// 
+		this->checkBox2->AutoSize = true;
+		this->checkBox2->Location = System::Drawing::Point(243, 188);
+		this->checkBox2->Name = L"checkBox2";
+		this->checkBox2->Size = System::Drawing::Size(73, 17);
+		this->checkBox2->TabIndex = 6;
+		this->checkBox2->Text = L"XZ СТОП";
+		this->checkBox2->UseVisualStyleBackColor = true;
+		// 
+		// textBox6
+		// 
+		this->textBox6->Location = System::Drawing::Point(107, 185);
+		this->textBox6->Name = L"textBox6";
+		this->textBox6->Size = System::Drawing::Size(73, 20);
+		this->textBox6->TabIndex = 10;
+		// 
+		// label6
+		// 
+		this->label6->AutoSize = true;
+		this->label6->Location = System::Drawing::Point(20, 189);
+		this->label6->Name = L"label6";
+		this->label6->Size = System::Drawing::Size(81, 13);
+		this->label6->TabIndex = 10;
+		this->label6->Text = L"OEM XZ СТОП";
+		// 
 		// ConfigDialog
 		// 
 		this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-		this->ClientSize = System::Drawing::Size(323, 212);
+		this->ClientSize = System::Drawing::Size(323, 258);
+		this->Controls->Add(this->label6);
+		this->Controls->Add(this->textBox6);
+		this->Controls->Add(this->checkBox2);
 		this->Controls->Add(this->groupBox1);
 		this->Controls->Add(this->comboBox1);
 		this->Controls->Add(this->checkBox1);
+		this->Controls->Add(this->button1);
 		this->Controls->Add(this->statusStrip1);
 		this->Name = L"ConfigDialog";
 		this->Text = L"Настройки подключения";
@@ -325,60 +360,90 @@ String^ readSetting(String^ node){
 return "Nothing to return";
 }
 
-void getCOMPorts() {
-    comboBox1->Items->Clear();  // Очистка списка
+void getCOMPorts()
+{
+    comboBox1->Items->Clear();
+    bool wmiOk = true;
 
+    // ---------- Проверка WMI ----------
     try {
-        // Поиск всех устройств с COM в названии
-        ManagementObjectSearcher^ searcher = gcnew ManagementObjectSearcher(
-            "SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
+        ManagementObjectSearcher^ test =
+            gcnew ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+        test->Get();
+    }
+    catch (...) {
+        wmiOk = false;
+    }
 
-        for each (ManagementObject^ obj in searcher->Get()) {
-            String^ name = obj["Name"]->ToString();             // "USB Serial Device (COM3)"
-            String^ deviceID = obj["PNPDeviceID"]->ToString();  // "USB\\VID_2E8A&PID_000A\\PULT01"
+    // ---------- ВАРИАНТ 1: WMI работает ----------
+    if (wmiOk) {
+        try {
+            ManagementObjectSearcher^ searcher =
+                gcnew ManagementObjectSearcher(
+                    "SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
 
-            // Извлечение COM-порта
-            int comIndex = name->LastIndexOf("COM");
-            if (comIndex < 0) continue;
-            String^ comPort = name->Substring(comIndex)->TrimEnd(')');
+            for each (ManagementObject^ obj in searcher->Get()) {
 
-            // Поиск по VID/PID для RP2040 (или твоего устройства)
-            if (deviceID->Contains("VID_2E8A") && deviceID->Contains("PID_0003")) {
-                String^ friendlyName = "RP2040";
+                if (!obj["Name"] || !obj["PNPDeviceID"])
+                    continue;
 
-                // Извлечение серийного номера
-                int serialIndex = deviceID->LastIndexOf("\\");
-                if (serialIndex >= 0 && serialIndex + 1 < deviceID->Length) {
-                    String^ serial = deviceID->Substring(serialIndex + 1);
+                String^ name = obj["Name"]->ToString();
+                String^ deviceID = obj["PNPDeviceID"]->ToString();
 
-                    // Назначаем имя по сериалу
-                    if (serial == "PULT01") {
-                        friendlyName = "Mach3 Control Pult";
+                int comIndex = name->LastIndexOf("COM");
+                if (comIndex < 0) continue;
+
+                String^ comPort = name->Substring(comIndex)->TrimEnd(')');
+
+                // RP2040 (VID_2E8A)
+                if (deviceID->Contains("VID_2E8A")) {
+                    String^ friendlyName = "RP2040";
+
+                    int serialIndex = deviceID->LastIndexOf("\\");
+                    if (serialIndex >= 0 && serialIndex + 1 < deviceID->Length) {
+                        String^ serial = deviceID->Substring(serialIndex + 1);
+
+                        if (serial == "PULT01")
+                            friendlyName = "Mach3 Control Pult";
+                        else if (serial == "SENSOR01")
+                            friendlyName = "Sensor Board";
+                        else
+                            friendlyName = "RP2040 (" + serial + ")";
                     }
-                    else if (serial == "SENSOR01") {
-                        friendlyName = "Sensor Board";
-                    }
-                    else {
-                        friendlyName = "RP2040 Unknown (" + serial + ")";
-                    }
+
+                    comboBox1->Items->Add(friendlyName + " (" + comPort + ")");
                 }
-
-                comboBox1->Items->Add(friendlyName + " (" + comPort + ")");
-            }
-            else {
-                // Добавляем прочие COM-порты с оригинальным именем
-                comboBox1->Items->Add(name);
+                else {
+                    comboBox1->Items->Add(name);
+                }
             }
         }
-
-        if (comboBox1->Items->Count > 0)
-            comboBox1->SelectedIndex = 0;
-        else
-            comboBox1->Items->Add("Нет доступных устройств");
-
-    } catch (Exception^ ex) {
-        MessageBox::Show("Ошибка при получении COM-портов: " + ex->Message);
+        catch (...) {
+            wmiOk = false; // если WMI отвалился на запросе
+        }
     }
+
+    // ---------- ВАРИАНТ 2: fallback без WMI ----------
+    if (!wmiOk) {
+        try {
+            array<String^>^ ports = this->Serial->GetPortNames();
+            Array::Sort(ports);
+
+            for each (String^ port in ports) {
+                comboBox1->Items->Add(port);
+            }
+
+            if (ports->Length == 0)
+                comboBox1->Items->Add("COM-порты не найдены");
+        }
+        catch (Exception^ ex) {
+            MessageBox::Show("Ошибка COM-портов: " + ex->Message);
+            return;
+        }
+    }
+
+    if (comboBox1->Items->Count > 0)
+        comboBox1->SelectedIndex = 0;
 }
 
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
@@ -469,11 +534,19 @@ getCOMPorts();
 
     try
     {
+    
+    //Чтение настроек их конфигурационного файла mach3turn.xml
 	 this->textBox1->Text = readSetting("B1");
 	 this->textBox2->Text = readSetting("B2");
 	 this->textBox3->Text = readSetting("B3");
 	 this->textBox4->Text = readSetting("B4");
 	 this->textBox5->Text = readSetting("B5");
+	 
+	 
+	 this->textBox6->Text =  readSetting("AUTOSTOPCODE");
+	 
+	 if (readSetting("AUTOSTOP") == "True"){this->checkBox2->Checked = true ;}
+	 if (readSetting("AUTOSTOP") == "False"){this->checkBox2->Checked = false ;} 
     }
     
     catch (Exception^ ex)
@@ -522,6 +595,20 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	 writeSetting("B3", this->textBox3->Text);
 	 writeSetting("B4", this->textBox4->Text);
 	 writeSetting("B5", this->textBox5->Text);
+	 
+	 //	 Сохранение флага автостоп и кода автостопа
+	 if (this->checkBox2->Checked)
+	 {
+	   writeSetting("AUTOSTOP", "True");
+	   writeSetting("AUTOSTOPCODE", this->textBox6->Text); 
+	 }
+	 
+	 	 if (!this->checkBox2->Checked)
+	 {
+	   writeSetting("AUTOSTOP", "False");
+	   writeSetting("AUTOSTOPCODE", ""); 
+	 }
+    
     }
     
     catch (Exception^ ex)
@@ -530,14 +617,6 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
     }
     
 }
-
-
-
-		 
-	 
-		 
-
-
 
 };	 
 }
